@@ -2,6 +2,7 @@ import proto_gen.AuthServ_pb2 as AuthServ, proto_gen.AuthServ_pb2_grpc as AuthSe
 import AuthLib, DBMaster, emailSender
 import json
 import grpc
+import logging
 from pathlib import Path
 class Soc_net_server(AuthServGrpc.AuthAndRegistService):
     def __init__(self):
@@ -19,6 +20,9 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistService):
         
     async def GetSecureChannel(self):
         return await grpc.aio.secure_channel(self.channel_data, self.credential)
+    
+    def GetCreds(self):
+        return self.credential
     
     async def TryRegistr(self, request, context):
         isOk = await self.auth_master.TryRegistrate(request.email, request.password)
@@ -52,4 +56,16 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistService):
             jwt, uid = auth_result
             response = AuthServ.PasswordAuthResult(jwt, uid)
         return response 
+    
+
+async def serve():
+    server = grpc.aio.server()
+    server_instanse = Soc_net_server()
+    AuthServGrpc.add_AuthAndRegistServiceServicer_to_server(server_instanse, server)
+    listen_addr = 'localhost:8091'
+    server.add_secure_port(listen_addr, server_instanse.GetCreds())
+    logging.info("Starting server on %s", listen_addr)
+    await server.start()                                                        
+    await server.wait_for_termination() 
+
 
