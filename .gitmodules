@@ -1,0 +1,3 @@
+[submodule "Soc_net_services"]
+	path = Soc_net_services
+	url = git@github.com:KirillVelichk0/Soc_net_services.git

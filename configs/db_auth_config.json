@@ -1,0 +1,6 @@
+{
+    "user":"postgres",
+    "pathToPassword":"/home/houdini/private/pgPass.json",
+    "db_name":"soc_net_auth_3c",
+    "host": "127.0.0.1"
+}
