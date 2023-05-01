@@ -27,8 +27,7 @@ message RegistrationResult{
 }
 
 message RegistrationVerificationResult{
-    string token = 1;
-    bool isOk = 2;
+    string response_message = 1;
 }
 message AuthResult{
     int64 userId = 1;

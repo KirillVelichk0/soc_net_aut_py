@@ -57,9 +57,7 @@ class RegistrationVerificationInput(_message.Message):
     def __init__(self, randomDataToken: _Optional[str] = ...) -> None: ...
 
 class RegistrationVerificationResult(_message.Message):
-    __slots__ = ["isOk", "token"]
-    ISOK_FIELD_NUMBER: _ClassVar[int]
-    TOKEN_FIELD_NUMBER: _ClassVar[int]
-    isOk: bool
-    token: str
-    def __init__(self, token: _Optional[str] = ..., isOk: bool = ...) -> None: ...
+    __slots__ = ["response_message"]
+    RESPONSE_MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    response_message: str
+    def __init__(self, response_message: _Optional[str] = ...) -> None: ...
