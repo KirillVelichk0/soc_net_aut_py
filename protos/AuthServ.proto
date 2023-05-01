@@ -35,5 +35,5 @@ message AuthResult{
 }
 message PasswordAuthResult{
 	string jwtToken = 1;
-	string responceMessage = 2;
+	int64 user_id = 2;
 }

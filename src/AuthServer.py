@@ -27,4 +27,29 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistService):
         else:
             answer = 'Аккаунт с данной почтой уже существует. Если эта ваша почта, но вы не регистрировались\
                 , обратитесь в службу поддержки'
+            
         return AuthServ.RegistrationResult(answer=answer, isOk=isOk)
+    
+
+    async def TryVerifRegistr(self, request, context):
+        resp_message = await self.auth_master.TryVerify(request.randomDataToken)
+        return AuthServ.RegistrationVerificationResult(resp_message)
+    
+    async def Authenticate(self, request, context):
+        auth_res = await self.auth_master.LoginUsingJWT(request.jwtToken)
+        if auth_res is None:
+            response = AuthServ.AuthResult(-1, '')
+        else:
+            next_jwt, user_id = auth_res
+            response = AuthServ.AuthResult(user_id, next_jwt)
+        return response
+    
+    async def AuthFromPassword(self, request, context):
+        auth_result = await self.auth_master.LoginUsingPassword(request.email, request.password)
+        if auth_result is None:
+            response = AuthServ.PasswordAuthResult('', -1)
+        else:
+            jwt, uid = auth_result
+            response = AuthServ.PasswordAuthResult(jwt, uid)
+        return response 
+
