@@ -20,12 +20,15 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistServiceServicer):
             path_to_cred_json = json.load(json_config)
         key_cred = path_to_cred_json['CredsKey']
         pem_cred = path_to_cred_json["CredsPem"]
+        client_crt = path_to_cred_json['CredsCrt']
         with open(key_cred, 'rb') as f:
             private_key = f.read()
         with open(pem_cred, 'rb') as f:
             certificate_chain = f.read()
+        with open(client_crt, 'rb') as f:
+            root_pem = f.read()
         print("config parsed")
-        ssl_data = grpc.ssl_server_credentials(((private_key, certificate_chain), ), require_client_auth=False)
+        ssl_data = grpc.ssl_server_credentials(((private_key, certificate_chain), ))
         self.credential = ssl_data
         print("creds getted")
         
