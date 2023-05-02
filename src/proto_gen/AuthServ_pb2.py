@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x41uthServ.proto\x12\x03\x43\x41S\"4\n\x11RegistrationInput\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"8\n\x1dRegistrationVerificationInput\x12\x17\n\x0frandomDataToken\x18\x01 \x01(\t\"\x1d\n\tAuthInput\x12\x10\n\x08jwtToken\x18\x01 \x01(\t\"4\n\x11PasswordAuthInput\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"2\n\x12RegistrationResult\x12\x0e\n\x06\x61nswer\x18\x01 \x01(\t\x12\x0c\n\x04isOk\x18\x02 \x01(\x08\":\n\x1eRegistrationVerificationResult\x12\x18\n\x10response_message\x18\x01 \x01(\t\"/\n\nAuthResult\x12\x0e\n\x06userId\x18\x01 \x01(\x03\x12\x11\n\tnextToken\x18\x02 \x01(\t\"?\n\x12PasswordAuthResult\x12\x10\n\x08jwtToken\x18\x01 \x01(\t\x12\x17\n\x0fresponceMessage\x18\x02 \x01(\t2\xa7\x02\n\x14\x41uthAndRegistService\x12=\n\nTryRegistr\x12\x16.CAS.RegistrationInput\x1a\x17.CAS.RegistrationResult\x12Z\n\x0fTryVerifRegistr\x12\".CAS.RegistrationVerificationInput\x1a#.CAS.RegistrationVerificationResult\x12/\n\x0c\x41uthenticate\x12\x0e.CAS.AuthInput\x1a\x0f.CAS.AuthResult\x12\x43\n\x10\x41uthFromPassword\x12\x16.CAS.PasswordAuthInput\x1a\x17.CAS.PasswordAuthResultb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0e\x41uthServ.proto\x12\x03\x43\x41S\"4\n\x11RegistrationInput\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"8\n\x1dRegistrationVerificationInput\x12\x17\n\x0frandomDataToken\x18\x01 \x01(\t\"\x1d\n\tAuthInput\x12\x10\n\x08jwtToken\x18\x01 \x01(\t\"4\n\x11PasswordAuthInput\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"2\n\x12RegistrationResult\x12\x0e\n\x06\x61nswer\x18\x01 \x01(\t\x12\x0c\n\x04isOk\x18\x02 \x01(\x08\":\n\x1eRegistrationVerificationResult\x12\x18\n\x10response_message\x18\x01 \x01(\t\"/\n\nAuthResult\x12\x0e\n\x06userId\x18\x01 \x01(\x03\x12\x11\n\tnextToken\x18\x02 \x01(\t\"7\n\x12PasswordAuthResult\x12\x10\n\x08jwtToken\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\x03\x32\xa7\x02\n\x14\x41uthAndRegistService\x12=\n\nTryRegistr\x12\x16.CAS.RegistrationInput\x1a\x17.CAS.RegistrationResult\x12Z\n\x0fTryVerifRegistr\x12\".CAS.RegistrationVerificationInput\x1a#.CAS.RegistrationVerificationResult\x12/\n\x0c\x41uthenticate\x12\x0e.CAS.AuthInput\x1a\x0f.CAS.AuthResult\x12\x43\n\x10\x41uthFromPassword\x12\x16.CAS.PasswordAuthInput\x1a\x17.CAS.PasswordAuthResultb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'AuthServ_pb2', globals())
@@ -35,7 +35,7 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _AUTHRESULT._serialized_start=332
   _AUTHRESULT._serialized_end=379
   _PASSWORDAUTHRESULT._serialized_start=381
-  _PASSWORDAUTHRESULT._serialized_end=444
-  _AUTHANDREGISTSERVICE._serialized_start=447
-  _AUTHANDREGISTSERVICE._serialized_end=742
+  _PASSWORDAUTHRESULT._serialized_end=436
+  _AUTHANDREGISTSERVICE._serialized_start=439
+  _AUTHANDREGISTSERVICE._serialized_end=734
 # @@protoc_insertion_point(module_scope)

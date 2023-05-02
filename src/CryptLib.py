@@ -17,18 +17,18 @@ class CryptMaster:
     GoodHoursCount = 720
     LimForNewGenInSeconds = 360 * 3600
     #Hash password in scrypt using random salt and encode results in base64_url
-    def HashAndGetUrlWithSalt(password: str, salt: str):
+    def HashAndGetUrlWithSalt(self, password: str, salt: str):
         return urlsafe_b64encode(scrypt.hash(password, salt, 16384, 8, 1, 32))
     
 
-    def GetHashedAndSaltInUrl(password: str):
+    def GetHashedAndSaltInUrl(self, password: str):
         salt = secrets.token_bytes(32)
         hashed_pass = scrypt.hash(password, salt, 16384, 8, 1, 32)
         salt = urlsafe_b64encode(salt)
         hashed_pass = urlsafe_b64encode(hashed_pass)
         return (hashed_pass, salt)
     
-    def CheckBase64ToFormat(b64_data: str) -> bool:
+    def CheckBase64ToFormat(self, b64_data: str) -> bool:
         match = re.search('^[A-Za-z0-9_-]+$', b64_data)
         if match:
             return match[0] == b64_data
@@ -44,19 +44,19 @@ class CryptMaster:
         except:
              return False
 
-    def GenerateRsaKeys():
+    def GenerateRsaKeys(self):
         rsaKey = RSA.generate(2048)
         return (rsaKey, rsaKey.public_key())
     
-    def GenerateRandomVerificationTokenData():
+    def GenerateRandomVerificationTokenData(self):
         randomData = secrets.token_bytes(32)
         randomData = urlsafe_b64encode(randomData).decode()
         return randomData
     
-    def ConfigureVerificationToken(uid:int, token_data:str):
+    def ConfigureVerificationToken(self, uid:int, token_data:str):
         return str(uid) + '.' + token_data
     
-    def TryParseRandomVerificationToken(token: str):
+    def TryParseRandomVerificationToken(self, token: str):
         data = token.split('.', 1)
         try:
             uid = int(data[0])

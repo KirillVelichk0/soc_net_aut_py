@@ -27,12 +27,12 @@ class PasswordAuthInput(_message.Message):
     def __init__(self, email: _Optional[str] = ..., password: _Optional[str] = ...) -> None: ...
 
 class PasswordAuthResult(_message.Message):
-    __slots__ = ["jwtToken", "responceMessage"]
+    __slots__ = ["jwtToken", "user_id"]
     JWTTOKEN_FIELD_NUMBER: _ClassVar[int]
-    RESPONCEMESSAGE_FIELD_NUMBER: _ClassVar[int]
+    USER_ID_FIELD_NUMBER: _ClassVar[int]
     jwtToken: str
-    responceMessage: str
-    def __init__(self, jwtToken: _Optional[str] = ..., responceMessage: _Optional[str] = ...) -> None: ...
+    user_id: int
+    def __init__(self, jwtToken: _Optional[str] = ..., user_id: _Optional[int] = ...) -> None: ...
 
 class RegistrationInput(_message.Message):
     __slots__ = ["email", "password"]

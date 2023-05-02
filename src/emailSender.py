@@ -35,9 +35,11 @@ class MailServer:
         try:
             mime = MIMEText(text, 'plain', 'utf-8')
             mime['Subject'] = Header(subject, 'utf-8')
+            print(text)
+            print(email)
             self.server.sendmail(self.login, email, mime.as_string())
         except:
-            sys.exit(4)
+            raise Exception()
 
 
    

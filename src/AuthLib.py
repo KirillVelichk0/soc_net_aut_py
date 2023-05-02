@@ -9,11 +9,14 @@ class AuthMaster:
     async def TryRegistrate(self, email: str, password:str) -> bool:
         (hashed_b64, salt_b64) = self.CryptInstanse.GetHashedAndSaltInUrl(password)
         token_data = self.CryptInstanse.GenerateRandomVerificationTokenData()
-        uid = await self.DBMaster.TryRegistrate(email, hashed_b64, salt_b64, token_data)
+        uid = await self.DBMaster.TryRegistrate(email, hashed_b64.decode(), salt_b64.decode(), token_data)
         if uid == -1:
             return False
         verification_token = self.CryptInstanse.ConfigureVerificationToken(uid, token_data)
-        self.EmailServer.TrySendToEmail(email, verification_token)
+        try:
+            self.EmailServer.TrySendToEmail(email, verification_token)
+        except:
+            return False
         return True
 
     async def TryVerify(self, verify_token: str) -> str:

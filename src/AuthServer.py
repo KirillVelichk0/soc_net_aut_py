@@ -7,11 +7,12 @@ import AuthLib, DBMaster, emailSender
 import json
 import grpc
 import logging
+from concurrent import futures
 from pathlib import Path
-class Soc_net_server(AuthServGrpc.AuthAndRegistService):
+class Soc_net_server(AuthServGrpc.AuthAndRegistServiceServicer):
     def __init__(self, connected_db_master):
         self.auth_master = AuthLib.AuthMaster(DBMaster= connected_db_master, EmailServer=emailSender.MailServer())
-        self.init_str = 'localhost:8091'
+        self.init_str = '[::]:8091'
         #ssl cred init
         base_dir = Path(__file__).parent.parent.resolve()
         cur_path = base_dir.joinpath('configs', 'ssl_config.json')
@@ -29,12 +30,17 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistService):
         print("creds getted")
         
     async def GetSecureChannel(self):
-        return await grpc.aio.secure_channel(self.channel_data, self.credential)
+        return await grpc.aio.secure_channel(self.init_str, self.credential)
     
+    async def GetInsecureChannel(self):
+        return await grpc.aio.insecure_channel(self.init_str)
+
     def GetCreds(self):
         return self.credential
     
-    async def TryRegistr(self, request, context):
+    async def TryRegistr(self, request: AuthServ.RegistrationInput, context: grpc.aio.ServicerContext)\
+        ->AuthServ.RegistrationResult:
+        logging.info('Start registrating')
         isOk = await self.auth_master.TryRegistrate(request.email, request.password)
         if isOk:
             answer = "На вашу почту отправлено письмо с ссылкой для подтверждения регистрации"
@@ -69,13 +75,13 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistService):
     
 
 async def serve():
-    server = grpc.aio.server()
+    server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
     db_master = DBMaster.DbMaster()
     await db_master.Connect()
     server_instanse = Soc_net_server(db_master)
     AuthServGrpc.add_AuthAndRegistServiceServicer_to_server(server_instanse, server)
     listen_addr = '0.0.0.0:8091'
-    server.add_secure_port(listen_addr, server_instanse.GetCreds())
+    server.add_secure_port(server_instanse.init_str, server_credentials=server_instanse.GetCreds())
     logging.info("Starting server on %s", listen_addr)
     await server.start()                                                        
     await server.wait_for_termination() 
