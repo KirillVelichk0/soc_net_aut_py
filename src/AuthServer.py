@@ -1,3 +1,7 @@
+import sys, os
+lib_path = os.path.abspath(os.path.join(__file__, '..', 'proto_gen'))
+sys.path.append(lib_path)
+
 import proto_gen.AuthServ_pb2 as AuthServ, proto_gen.AuthServ_pb2_grpc as AuthServGrpc
 import AuthLib, DBMaster, emailSender
 import json
@@ -5,17 +9,23 @@ import grpc
 import logging
 from pathlib import Path
 class Soc_net_server(AuthServGrpc.AuthAndRegistService):
-    def __init__(self):
-        self.auth_master = AuthLib.AuthMaster(DBMaster=DBMaster.DbMaster(), EmailServer=emailSender.MailServer())
+    def __init__(self, connected_db_master):
+        self.auth_master = AuthLib.AuthMaster(DBMaster= connected_db_master, EmailServer=emailSender.MailServer())
         self.init_str = 'localhost:8091'
         #ssl cred init
         base_dir = Path(__file__).parent.parent.resolve()
         cur_path = base_dir.joinpath('configs', 'ssl_config.json')
         with open(cur_path) as json_config:
             path_to_cred_json = json.load(json_config)
-        path_to_cred = path_to_cred_json['PathToCreds']
+        key_cred = path_to_cred_json['CredsKey']
+        pem_cred = path_to_cred_json["CredsPem"]
+        with open(key_cred, 'rb') as f:
+            private_key = f.read()
+        with open(pem_cred, 'rb') as f:
+            certificate_chain = f.read()
         print("config parsed")
-        self.credential = grpc.ssl_channel_credentials(open(path_to_cred, 'rb').read())
+        ssl_data = grpc.ssl_server_credentials(((private_key, certificate_chain), ), require_client_auth=False)
+        self.credential = ssl_data
         print("creds getted")
         
     async def GetSecureChannel(self):
@@ -60,9 +70,11 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistService):
 
 async def serve():
     server = grpc.aio.server()
-    server_instanse = Soc_net_server()
+    db_master = DBMaster.DbMaster()
+    await db_master.Connect()
+    server_instanse = Soc_net_server(db_master)
     AuthServGrpc.add_AuthAndRegistServiceServicer_to_server(server_instanse, server)
-    listen_addr = 'localhost:8091'
+    listen_addr = '0.0.0.0:8091'
     server.add_secure_port(listen_addr, server_instanse.GetCreds())
     logging.info("Starting server on %s", listen_addr)
     await server.start()                                                        

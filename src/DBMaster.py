@@ -5,20 +5,26 @@ import ssl
 from pathlib import Path
 
 class DbMaster:
-    async def __init__(self):
+    def __init__(self):
         #cred data parsing
         base_dir = Path(__file__).parent.parent.resolve()
         cur_path = base_dir.joinpath('configs', 'db_auth_config.json')
         with open(cur_path) as json_config:
             pg_cred_data_json = json.load(json_config)
-        user = pg_cred_data_json['user']
-        db_name = pg_cred_data_json['db_name']
-        host = pg_cred_data_json['host']
+        self.user = pg_cred_data_json['user']
+        self.db_name = pg_cred_data_json['db_name']
+        self.host = pg_cred_data_json['host']
         pass_path = pg_cred_data_json['pathToPassword']
         with open(pass_path) as json_config:
             pg_cred_data_json = json.load(json_config)
-        password = pg_cred_data_json['password']
-        self.connection = await asyncpg.connect(user=user, db_name=db_name, host=host, password=password, ssl='require')
+        self.password = pg_cred_data_json['password']
+        
+
+    async def Connect(self):
+        self.connection = await asyncpg.connect(user=self.user, database=self.db_name,\
+                                                 host=self.host, password=self.password, ssl='prefer')
+
+
 
     async def TryRegistrate(self, email:str, password: str, salt: str, random_token: str) -> int:
         row = await self.connection.fetchrow('SELECT try_register as temp_uid\

@@ -91,6 +91,6 @@ class CryptMaster:
                 state = JWTState.BadOld
             elif cur_unix_time > token_data[1] - self.LimForNewGenInSeconds:
                 state = JWTState.GoodOld
-            return (state, token_data[0], token_data[1])
+            return (state, token_data[0])
         except:
-            return JWTState.DontEq, None, None
+            return JWTState.DontEq, None

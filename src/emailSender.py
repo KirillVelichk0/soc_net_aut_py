@@ -1,13 +1,15 @@
 import json
 import smtplib as smtp
-import sys
+import sys, ssl
 from email.mime.text import MIMEText
 from email.header import Header
-
+from pathlib import Path
 class MailServer:
     def __init__(self):
         try:
-            with open('../configs/emailSenderConfig.json') as jConfig:
+            base_dir = Path(__file__).parent.parent.resolve()
+            cur_path = base_dir.joinpath('configs', 'emailSenderConfig.json')
+            with open(cur_path) as jConfig:
                 configDict = json.load(jConfig)
                 self.login = configDict['emailSenderLogin']
                 pathToPass = configDict['pathToPass']
@@ -17,10 +19,11 @@ class MailServer:
             lines = [line.rstrip() for line in file]
             password = lines[0]
         try:
-            self.server = smtp.SMTP_SSL('smtp.yandex.ru', 587)
+            context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+            self.server = smtp.SMTP('smtp.yandex.ru', 587)
+            self.server.starttls(context=context)
         except smtp.SMTPConnectError:
             sys.exit(1)
-        self.server.starttls()
         try:
             self.server.login(self.login, password)
         except smtp.SMTPAuthenticationError:
