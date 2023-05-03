@@ -37,3 +37,4 @@ message PasswordAuthResult{
 	string jwtToken = 1;
 	int64 user_id = 2;
 }
+

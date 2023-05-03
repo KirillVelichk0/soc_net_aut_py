@@ -54,9 +54,10 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistServiceServicer):
         return AuthServ.RegistrationResult(answer=answer, isOk=isOk)
     
 
-    async def TryVerifRegistr(self, request, context):
+    async def TryVerifRegistr(self, request: AuthServ.RegistrationVerificationInput, context: grpc.aio.ServicerContext)\
+        ->AuthServ.RegistrationVerificationResult:
         resp_message = await self.auth_master.TryVerify(request.randomDataToken)
-        return AuthServ.RegistrationVerificationResult(resp_message)
+        return AuthServ.RegistrationVerificationResult(response_message=resp_message)
     
     async def Authenticate(self, request, context):
         auth_res = await self.auth_master.LoginUsingJWT(request.jwtToken)
