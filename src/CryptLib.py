@@ -1,6 +1,7 @@
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 import scrypt, secrets
 import time
+import cryptography
 from Crypto.PublicKey import RSA
 from enum import Enum
 import jwt, re
@@ -17,8 +18,8 @@ class CryptMaster:
     GoodHoursCount = 720
     LimForNewGenInSeconds = 360 * 3600
     #Hash password in scrypt using random salt and encode results in base64_url
-    def HashAndGetUrlWithSalt(self, password: str, salt: str):
-        return urlsafe_b64encode(scrypt.hash(password, salt, 16384, 8, 1, 32))
+    def HashAndGetUrlWithSalt(self, password: str, salt: bytes):
+        return urlsafe_b64encode(scrypt.hash(password, salt, 16384, 8, 1, 32)).decode()
     
 
     def GetHashedAndSaltInUrl(self, password: str):
@@ -70,7 +71,7 @@ class CryptMaster:
         unix_time_lifetime = cur_unix_time + self.GoodHoursCount * 60 * 60
         private_key, public_key = self.GenerateRsaKeys()
         public_key_str = public_key.export_key().decode()
-        token_id = await registrator(userId, public_key_str, unix_time_lifetime)
+        token_id = await registrator(userId, unix_time_lifetime, public_key_str)
         token_data = {"userId": userId, "exp": unix_time_lifetime}
         token_header = {"tokenId": token_id}
         encoded_jwt = jwt.encode(token_data, private_key.export_key(), algorithm="RS256", headers=token_header)

@@ -35,7 +35,7 @@ class AuthMaster:
         isEq = self.CryptInstanse.ComparePasswords(password_from_user=password,\
                                                     hashed_b64_password=pass_h_b64, salt_b64=salt_b64)
         if isEq:
-            return await self.CryptInstanse.CreateJWTToken(self.DBMaster.InsertJWTToken, uid)
+            return await self.CryptInstanse.CreateJWTToken(self.DBMaster.InsertJWTToken, uid), uid
         else:
             return None
         

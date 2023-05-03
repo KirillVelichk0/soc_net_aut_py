@@ -47,13 +47,13 @@ class DbMaster:
 
     async def GetJwtFromTokenId(self, token_id: int):
         row = await self.connection.fetchrow('SELECT open_key from users_tokens_info WHERE tid = $1', token_id)
-        if len(row) != 1:
+        if row is None:
             return None
         return row['open_key']
     
     async def GetUserId_HashedPassAndSalt(self, email: str):
         row = await self.connection.fetchrow('SELECT uid, pass_h, salt from users_main_table WHERE email = $1', email)
-        if len(row) != 1:
+        if row is None:
             return None
         return (row['uid'], row['pass_h'], row['salt'])
 
