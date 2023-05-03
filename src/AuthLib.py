@@ -41,7 +41,7 @@ class AuthMaster:
         
     async def LoginUsingJWT(self, jwt: str):
         result = await self.CryptInstanse.VerifyJWTToken(self.DBMaster.GetJwtFromTokenId, jwt)
-        if result[0] == CryptLib.JWTState.BadOld or CryptLib.JWTState.DontEq:
+        if result[0] == CryptLib.JWTState.BadOld or result[0] == CryptLib.JWTState.DontEq:
             return None
         else:
             state, uid = result

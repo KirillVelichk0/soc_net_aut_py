@@ -63,10 +63,10 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistServiceServicer):
         -> AuthServ.AuthResult:
         auth_res = await self.auth_master.LoginUsingJWT(request.jwtToken)
         if auth_res is None:
-            response = AuthServ.AuthResult(userId=-1, next_jwt='')
+            response = AuthServ.AuthResult(userId=-1, nextToken='')
         else:
             next_jwt, user_id = auth_res
-            response = AuthServ.AuthResult(userId=user_id, next_jwt=next_jwt)
+            response = AuthServ.AuthResult(userId=user_id, nextToken=next_jwt)
         return response
     
     async def AuthFromPassword(self, request: AuthServ.PasswordAuthInput, context: grpc.aio.ServicerContext)\
