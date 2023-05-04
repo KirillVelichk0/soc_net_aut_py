@@ -33,11 +33,16 @@ class MailServer:
     def TrySendToEmail(self, email:str, text:str):
         subject = 'Account registration'
         try:
-            mime = MIMEText(text, 'plain', 'utf-8')
+           ''' mime = MIMEText(text, 'plain', 'utf-8')
             mime['Subject'] = Header(subject, 'utf-8')
             print(text)
             print(email)
-            self.server.sendmail(self.login, email, mime.as_string())
+            self.server.sendmail(self.login, email, mime.as_string())'''
+           message = 'From: {}\nTo: {}\nSubject: {}\n\n{}'.format(self.login,
+                                                       email, 
+                                                       subject, 
+                                                       text)
+           self.server.sendmail(self.login, email, message)
         except:
             raise Exception()
 
