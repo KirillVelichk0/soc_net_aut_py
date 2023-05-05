@@ -17,20 +17,31 @@ class MailServer:
             sys.exit(3)
         with open(pathToPass) as file:
             lines = [line.rstrip() for line in file]
-            password = lines[0]
+            self.password = lines[0]
         try:
-            context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-            self.server = smtp.SMTP('smtp.yandex.ru', 587)
-            self.server.starttls(context=context)
+            self.context = ssl.SSLContext(ssl.PROTOCOL_TLS)
         except smtp.SMTPConnectError:
-            sys.exit(1)
+            return
+
+    def Restart(self):
         try:
-            self.server.login(self.login, password)
+            self.context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+            self.server = smtp.SMTP('smtp.yandex.ru', 587)
+            self.server.starttls(context=self.context)
+        except smtp.SMTPConnectError:
+            return False
+        try:
+            self.server.login(self.login, self.password)
+            return True
         except smtp.SMTPAuthenticationError:
-            sys.exit(2)
+            return False
 
 
     def TrySendToEmail(self, email:str, text:str):
+
+        if not self.Restart():
+            raise Exception()
+
         subject = 'Account registration'
         try:
            ''' mime = MIMEText(text, 'plain', 'utf-8')
@@ -43,6 +54,7 @@ class MailServer:
                                                        subject, 
                                                        text)
            self.server.sendmail(self.login, email, message)
+           self.server.quit()
         except:
             raise Exception()
 
