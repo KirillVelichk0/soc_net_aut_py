@@ -53,6 +53,11 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistServiceServicer):
             
         return AuthServ.RegistrationResult(answer=answer, isOk=isOk)
     
+    async def GetIdFromEmail(self, request: AuthServ.GetIdFromEmailRequest, context: grpc.aio.ServicerContext)\
+        -> AuthServ.GetIdFromEmailResponse:
+        pre_res= await self.auth_master.DBMaster.GetUserId_HashedPassAndSalt(request.email)
+        return AuthServ.GetIdFromEmailResponse(id=pre_res[0])
+
 
     async def TryVerifRegistr(self, request: AuthServ.RegistrationVerificationInput, context: grpc.aio.ServicerContext)\
         ->AuthServ.RegistrationVerificationResult:

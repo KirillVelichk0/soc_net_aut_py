@@ -18,6 +18,18 @@ class AuthResult(_message.Message):
     userId: int
     def __init__(self, userId: _Optional[int] = ..., nextToken: _Optional[str] = ...) -> None: ...
 
+class GetIdFromEmailRequest(_message.Message):
+    __slots__ = ["email"]
+    EMAIL_FIELD_NUMBER: _ClassVar[int]
+    email: str
+    def __init__(self, email: _Optional[str] = ...) -> None: ...
+
+class GetIdFromEmailResponse(_message.Message):
+    __slots__ = ["id"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    id: int
+    def __init__(self, id: _Optional[int] = ...) -> None: ...
+
 class PasswordAuthInput(_message.Message):
     __slots__ = ["email", "password"]
     EMAIL_FIELD_NUMBER: _ClassVar[int]
