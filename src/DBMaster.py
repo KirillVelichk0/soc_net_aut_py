@@ -44,7 +44,6 @@ class DbMaster:
                                        from insert_token($1, $2, $3)', uid, max_time, open_key)
         return row['token_id']
 
-
     async def GetJwtFromTokenId(self, token_id: int):
         row = await self.connection.fetchrow('SELECT open_key from public.users_tokens_info WHERE tid = $1', token_id)
         if row is None:

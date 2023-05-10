@@ -55,7 +55,10 @@ class Soc_net_server(AuthServGrpc.AuthAndRegistServiceServicer):
     
     async def GetIdFromEmail(self, request: AuthServ.GetIdFromEmailRequest, context: grpc.aio.ServicerContext)\
         -> AuthServ.GetIdFromEmailResponse:
+        logging.info('Id getting started')
         pre_res= await self.auth_master.DBMaster.GetUserId_HashedPassAndSalt(request.email)
+        if pre_res is None:
+            pre_res = [-1]
         return AuthServ.GetIdFromEmailResponse(id=pre_res[0])
 
 
